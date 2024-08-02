@@ -1,0 +1,10 @@
+Bootstrap_Flask==2.3.3
+Flask==2.3.2
+Werkzeug==3.0.0
+gunicorn==21.2.0
+openai
+python-dotenv
+pyrebase4
+ffmpeg-python
+moviepy
+requests
