@@ -1,0 +1,31 @@
+<title>Generated Content</title>
+{% include "header.html" %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h1 class="mt-4">Generated Content</h1>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Generated Content</li>
+            </ol>
+            <div id="generated-content">
+                {% if links %}
+                    <ul id="linksList">
+                        {% for key, link in links.items() %}
+                            <li>
+                                <h4>{{ link.name }}</h4>
+                                <p>Audio: <a href="{{ link.audio }}" target="_blank" download>Download Audio</a></p>
+                                <p>Video: <a href="{{ link.video }}" target="_blank" download>Download Video</a></p>
+                                <p>Suggestions: {{ link.suggestion }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No content has been generated yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% include "footer.html" %}
+
+

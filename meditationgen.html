@@ -1,0 +1,142 @@
+<title>Meditation Generator</title>
+{% include "header.html" %}
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Meditation Generator</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item"><a href="/">Home</a></li>
+                    <li class="breadcrumb-item active">Meditation Generator</li>
+                </ol>
+        <form id="form" action="/meditation" method="POST">
+            <div id="description" class="form-group">
+                <label>Description</label>
+                <div>
+                    <input for="description" class="form-control" type="text" name="description" placeholder="I'm feeling stressed about coding. Give me some encouraging words." required>
+                </div>
+                <p>Describe your meditation session.</p>
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Meditation Duration</label>
+                <div>
+                    <input for="duration" class="form-control" type="text" name="duration" placeholder="50" required>
+                </div>
+                <p>Enter how long you want your meditation session to be in seconds (e.g., 40).</p>
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Meditation Theme</label>
+                <div>
+                    <input for="theme" class="form-control" type="text" name="theme" placeholder="Ocean" required>
+                </div>
+                <p>Choose one of three themes (Nature, Ocean, General) that you want your meditation session to be themed around.</p>
+            </div>
+            <br>
+            <div class="form-group">
+                <label>Preferred Voice</label>
+                <div>
+                    <input for="voice" class="form-control" type="text" name="voice" placeholder="Male" required>
+                </div>
+                <p>Enter whether you'd like a female or male to narrate your meditation session.</p>
+            </div>
+            <br>
+            <button type="submit" id="generateButton" class="btn btn-primary">Generate (Audio and Video)</button>
+            <button type="button" id="loadingButton" class="btn btn-secondary" style="display:none;">Generating Audio and Video...</button>
+        </form>
+        <div class="modal fade" id="meditation-modal" tabindex="-1" aria-labelledby="meditationModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="meditationModalLabel">Meditation Generator</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <video id="videoPlayer" controls width="100%">
+                            <source src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <br>
+                        <audio id="audioPlayer" controls>
+                            <source src="" type="audio/mp3">
+                            Your browser does not support the audio element.
+                        </audio>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="sendEmail()">Send to Email</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </main>
+{% include "footer.html" %}
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-database.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script>
+    $(document).ready(function() {
+    console.log('Document ready');
+    $('#form').on('submit', function(event) {
+        console.log('Form submitted');
+        event.preventDefault();
+        $('#generateButton').hide();
+        $('#loadingButton').show();
+        var formData = $('#form').serialize();
+        console.log('Form data:', formData);
+        $.ajax({
+            type: 'POST',
+            url: '/meditation',
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                console.log('Success response:', response);
+                $('#loadingButton').hide();
+                $('#generateButton').show();
+                if(response.success) {
+                    $('#videoPlayer').attr('src', response.video_link);
+                    $('#audioPlayer').attr('src', response.audio_link);
+                    $('#videoLink').attr('href', response.video_link);
+                    $('#meditation-modal').modal('show');
+                } else {
+                    console.error('Server returned success: false');
+                    alert('An error occurred while generating the meditation.');
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error('Error:', textStatus, errorThrown);
+                console.log('Response Text:', jqXHR.responseText);
+                $('#loadingButton').hide();
+                $('#generateButton').show();
+                alert('An error occurred while generating the meditation.');
+            }
+        });
+    });
+});
+</script>
+<script>
+       function sendEmail() {
+            console.log('Sending email...');
+            $.ajax({
+                type: 'POST',
+                url: '/send_email',
+                dataType: 'json',
+                success: function(response) {
+                    console.log('Email send response:', response);
+                    if(response.success) {
+                        alert('Email sent successfully!');
+                    } else {
+                        console.error('Failed to send email:', response.message);
+                        alert('Failed to send email: ' + response.message);
+                    }
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('Error sending email:', textStatus, errorThrown);
+                    console.log('Response Text:', jqXHR.responseText);
+                    alert('An error occurred while sending the email.');
+                }
+            });
+        }
+        </script>

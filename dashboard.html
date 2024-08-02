@@ -1,0 +1,82 @@
+{% include "header.html" %}
+<div id="layoutSidenav_content">
+    <main>
+        <div class="container-fluid px-4">
+            <h2 class="mt-4">Dashboard</h2>
+            <ol class="breadcrumb mb-4">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item active">Dashboard</li>
+            </ol>
+            <h1>Welcome to Mediversal, {{ fname }}!</h1>
+            <p>Access the future of mental health through the tips of your fingers.<p>
+            <div class="row">
+            <div class="col-xl-3 col-md-6">
+                <div class="card bg-primary text-white mb-4">
+                    <div class="card-body">Daily Motivation</div>
+                    <div class="card-footer d-flex align-items-center justify-content-between">
+                        <a class="small text-white stretched-link" href="#" id="generateQuoteBtn">Generate a Positive Message</a>
+                        <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                    </div>
+                </div>
+            </div>
+              <div class="assignment-container d-flex flex-column flex-md-row justify-content-between align-items-center mt-3 p-4 gap-5">
+        <a class="text-decoration-none d-inline-block create-assignment popout-button 1" href="/meditationgenerator">
+            <div class="">
+                <div class="icon-box w-100 d-flex justify-content-end align-items-center">
+                </div>
+                <div class="content mt-4">
+                    <h3>Create a meditation audio & video</h3>
+                    <p>Instantly create customized meditation sessions.</p>
+                </div>
+            </div>
+        </a>
+        <a class="text-decoration-none d-inline-block assignment-grade popout-button" href="/generatedcontent">
+            <div class=""><div class="icon-box w-100 d-flex justify-content-end align-items-center">
+            </div>
+                <div class="content mt-4">
+                    <h3>View Generated Content</h3>
+                    <p>Take a look at all of your meditation sessions.</p>
+                </div></div>
+        </a>
+    </div>
+    <div class="modal fade" id="quoteModal" tabindex="-1" aria-labelledby="quoteModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="quoteModalLabel">Daily Motivation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p id="quoteText"></p>
+            <p id="quoteAuthor" class="text-end fst-italic"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    </main>
+{% include "footer.html" %}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const generateQuoteButton = document.querySelector('.card-footer a');
+      const quoteModal = new bootstrap.Modal(document.getElementById('quoteModal'));
+      const quoteText = document.getElementById('quoteText');
+      const quoteAuthor = document.getElementById('quoteAuthor');
+
+      generateQuoteButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        fetch('https://api.quotable.io/random')
+          .then(response => response.json())
+          .then(data => {
+            quoteText.textContent = data.content;
+            quoteAuthor.textContent = `— ${data.author}`;
+            quoteModal.show();
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            quoteText.textContent = 'Failed to load quote. Please try again.';
+            quoteAuthor.textContent = '';
+            quoteModal.show();
+          });
+      });
+    });
+</script>
