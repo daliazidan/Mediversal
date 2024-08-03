@@ -4,6 +4,10 @@ Please note that my website has not been deployed to the web yet due to data-fil
 
 ## Setup Instructions (for Future Users)
 
+### Project Overview
+
+Mediversal is an innovative app focused on revolutionizing mental health and self-care through ultra-personalized meditation audios and videos.
+
 ### Basics
 
 Head over to the website link and immediately create an account by clicking on the ‘Sign Up’ button. 
