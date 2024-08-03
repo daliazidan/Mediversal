@@ -1,7 +1,9 @@
 # Mediversal
 
-Please note that my website has not been deployed to the web yet due to data-file upload issues. This guide is simply for future users, as if the website is already live. 
-However, you can try downloading the files from the github repo onto your laptop and opening it within PyCharm or VSCode, though an API KEY is required. 
+Please note that my website has not been deployed to the web yet due to data-file upload issues. This guide is simply for future users NOT judges, as if the website is already live. 
+
+You will not be able to download the project locally as it requires API keys that cost money. Please simply watch the demo to understand how my project works. 
+
 
 ## Setup Instructions (for Future Users)
 
